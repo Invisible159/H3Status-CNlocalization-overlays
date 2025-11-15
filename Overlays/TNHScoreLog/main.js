@@ -52,10 +52,10 @@ function onMessage(e) {
       handleHoldPhaseEvent(event.status);
       break;
     case "TNHLostStealthBonus":
-      eventLog.addItem("STEALTH BONUS LOST", "#f46");
+      eventLog.addItem("失去潜行奖励", "#f46");
       break;
     case "TNHLostNoHitBonus":
-      eventLog.addItem("NO HIT BONUS LOST", "#f46");
+      eventLog.addItem("失去无伤奖励", "#f46");
       break;
     case "healthEvent":
       if (event.status.health <= 0) healthBar.setHealth(0);
@@ -99,7 +99,7 @@ function handlePluginVersion(event) {
 function handleSceneEvent(event) {
   scoreCounter.setValue(0);
   healthBar.setHealth(1);
-  utils.$(".weapon-name")[0].textContent = "NO WEAPON";
+  utils.$(".weapon-name")[0].textContent = "无武器";
   ammoCounter.update({ weapon: "", capacity: 0 });
   currentWeaponName = "";
   currentPhaseIndex = 0;
@@ -119,7 +119,7 @@ function handleSceneEvent(event) {
   ) {
     utils.set("#score-panel", { display: "initial" });
   } else {
-    utils.set("#score-panel", { display: "none" });
+    utils.set("#score-panel", { display: "initial" });
   }
 }
 
@@ -139,19 +139,19 @@ function handlePhaseEvent(event) {
         }
       } else {
         eventLog.addItem(
-          `SEED: ${event.seed} - HOLDS: ${event.count > 99 ? "ENDLESS" : event.count}`,
+          `种子: ${event.seed} - 据点数量: ${event.count > 99 ? "无尽" : event.count}`,
           "#8cf",
           10,
         );
       }
       if (event.holdName) {
-        eventLog.addItem(`NEXT TARGET: ${event.holdName}`, "#8cf", 10);
+        eventLog.addItem(`下个目标: ${event.holdName}`, "#8cf", 10);
         // eventLog.addItem(`RESUPPLY AT: ${event.supplyNames[0]}`, "#8cf", 10);
       }
       if (event.count < 99) {
         const holdsRemaining = event.count - event.level;
         eventLog.addItem(
-          `${holdsRemaining} HOLD${holdsRemaining > 1 ? "S" : ""} REMAINING`,
+          `剩余目标: ${holdsRemaining}`,
           "#8cf",
           10,
         );
@@ -207,7 +207,7 @@ function handlePlayerBuff(event) {
       element = "ammo-counter-left";
       color = "#f8f";
       eventLog.addItem(
-        `BULLET BOOST (${event.duration}s)`,
+        `伤害增幅 (${event.duration}秒)`,
         color,
         event.duration,
       );
@@ -216,7 +216,7 @@ function handlePlayerBuff(event) {
       element = "ammo-counter-left";
       color = "#4f8";
       eventLog.addItem(
-        `INFINITE AMMO (${event.duration}s)`,
+        `无限弹药 (${event.duration}秒)`,
         color,
         event.duration,
       );
@@ -224,23 +224,23 @@ function handlePlayerBuff(event) {
     case "Regen":
       element = "health-bar";
       color = "#4f8";
-      eventLog.addItem(`REGEN (${event.duration}s)`, color, event.duration);
+      eventLog.addItem(`再生 (${event.duration}秒)`, color, event.duration);
       break;
     case "Invincibility":
       element = "health-bar";
       color = "#fc4";
-      eventLog.addItem(`SHIELD (${event.duration}s)`, color, event.duration);
+      eventLog.addItem(`无敌护盾 (${event.duration}秒)`, color, event.duration);
       break;
     case "Ghosted":
       element = "health-bar";
       color = "#8cf";
-      eventLog.addItem(`GHOST (${event.duration}s)`, color, event.duration);
+      eventLog.addItem(`幽灵状态 (${event.duration}秒)`, color, event.duration);
       break;
     case "MuscleMeat":
       element = "score-panel";
       color = "#f84";
       eventLog.addItem(
-        `MUSCLEMEAT (${event.duration}s)`,
+        `肌肉强化 (${event.duration}秒)`,
         color,
         event.duration,
       );
@@ -248,12 +248,12 @@ function handlePlayerBuff(event) {
     case "Cyclops":
       element = "score-panel";
       color = "#f66";
-      eventLog.addItem(`CYCLOPS (${event.duration}s)`, color, event.duration);
+      eventLog.addItem(`独眼巨人 (${event.duration}秒)`, color, event.duration);
       break;
     case "Health":
       return;
     default:
-      eventLog.addItem(`${event.type} (${event.duration}s)`);
+      eventLog.addItem(`${event.type} (${event.duration}秒)`);
       return;
   }
 
@@ -300,15 +300,15 @@ function handleScoreEvent(event) {
 }
 
 function handleTokenEvent(event) {
-  const words = ["", "ONE", "TWO", "THREE", "FOUR", "FIVE"];
+  const words = ["", "一", "两", "三", "四", "五"];
   if (event.change <= 0) return;
   if (event.change > 1) {
     eventLog.addItem(
-      `${words[event.change] || event.change} TOKENS FOUND (${event.tokens})`,
+      `获得${words[event.change] || event.change}枚覆写代币(现有: ${event.tokens})`,
       "#8cf",
     );
   } else {
-    eventLog.addItem(`OVERRIDE TOKEN FOUND (${event.tokens})`, "#8cf");
+    eventLog.addItem(`获得覆写代币(现有: ${event.tokens})`, "#8cf");
   }
 }
 
@@ -327,35 +327,35 @@ function handleAmmoEvent(event) {
 function getEventString(event) {
   switch (event.type) {
     case "HoldPhaseComplete":
-      return "HOLD COMPLETED";
+      return "据点防守完成";
     case "HoldDecisecondsRemaining":
-      return `TIME BONUS (${Math.floor(event.value / 10 / 5)}s)`;
+      return `时间奖励(${Math.floor(event.value / 10 / 5)}秒)`;
     case "HoldWaveCompleteNoDamage":
-      return "HITLESS WAVE";
+      return "无伤波次";
     case "HoldPhaseCompleteNoDamage":
-      return "HITLESS HOLD";
+      return "无伤防守";
     case "HoldKill":
-      return "KILL";
+      return "击杀";
     case "HoldHeadshotKill":
-      return "HEADSHOT";
+      return "爆头";
     case "HoldMeleeKill":
-      return "MELEE";
+      return "近战";
     case "HoldJointBreak":
-      return "NECK SNAP";
+      return "扭颈";
     case "HoldJointSever":
-      return "RIP & TEAR";
+      return "撕裂";
     case "HoldKillDistanceBonus":
-      return `LONG SHOT (${25 * Math.round(event.value / 50)}m)`;
+      return `远程击杀(${25 * Math.round(event.value / 50)}米)`;
     case "HoldKillStreakBonus":
       // return `KILL STREAK (${Math.floor(event.value / 25)})`;
-      return "MULTIKILL";
+      return "连续击杀";
     case "TakeCompleteNoDamage":
-      return "HITLESS TAKE";
+      return "无伤夺取";
     case "TakeCompleteNoAlert":
     case "TakeHoldPointTakenClean":
-      return "NO ALERT";
+      return "未触发警报";
     case "TakeKillGuardUnaware":
-      return "STEALTH KILL";
+      return "潜行击杀";
     default:
       console.log(event);
       return "UNKNOWN";
@@ -553,6 +553,17 @@ class AmmoCounter {
     });
   }
 
+  // 添加一个通用的设置图标方法，包含错误处理
+  setAmmoIcon(el, roundType, roundClass, spent) {
+    el.src = AmmoCounter.getAmmoIcon(roundType, roundClass, spent);
+    // 重新绑定onerror处理
+    el.onerror = function() {
+      const path = globalConfig.overlayScale >= 1.5 ? "icons_big" : "icons";
+      this.src = `${path}/unknown_ammo.webp`;
+      this.onerror = null;
+    };
+  }
+
   update(event) {
     if (
       event.weapon != this.weapon ||
@@ -565,11 +576,10 @@ class AmmoCounter {
       for (let i = 0; i < event.capacity; i++) {
         const el = document.createElement("img");
         el.className = "ammo-counter-item";
-        el.src = AmmoCounter.getAmmoIcon(
-          event.roundType,
-          event.roundClass,
-          i < event.spent,
-        );
+        
+        // 使用新的设置图标方法
+        this.setAmmoIcon(el, event.roundType, event.roundClass, i < event.spent);
+        
         if (i < event.spent) el.style.opacity = 0.5;
         if (i >= event.current + event.spent) el.style.opacity = 0;
 
@@ -582,36 +592,25 @@ class AmmoCounter {
     }
 
     if (event.roundClass != this.roundClass) {
-      // console.log("Updating ammo type");
       this.elements.forEach((el, i) => {
-        el.src = AmmoCounter.getAmmoIcon(
-          event.roundType,
-          event.roundClass,
-          i < event.spent,
-        );
+        // 使用新的设置图标方法
+        this.setAmmoIcon(el, event.roundType, event.roundClass, i < event.spent);
       });
       this.roundClass = event.roundClass;
     }
 
-    // console.log(event.current, event.spent, this.current, this.spent);
-
     while (event.spent > this.spent) this.addSpent();
-
     while (event.spent < this.spent) this.removeSpent();
-
-    while (event.current + event.spent > this.current + this.spent)
-      this.addRound();
-
-    while (event.current + event.spent < this.current + this.spent)
-      this.removeRound();
-
-    // console.log(event.current, event.spent, this.current, this.spent);
+    while (event.current + event.spent > this.current + this.spent) this.addRound();
+    while (event.current + event.spent < this.current + this.spent) this.removeRound();
   }
 
   addRound() {
     if (this.current + this.spent >= this.capacity) return;
     const el = this.elements[this.current + this.spent];
-    el.src = AmmoCounter.getAmmoIcon(this.roundType, this.roundClass, false);
+    
+    // 使用新的设置图标方法
+    this.setAmmoIcon(el, this.roundType, this.roundClass, false);
 
     animate(el, {
       opacity: 1,
@@ -635,7 +634,9 @@ class AmmoCounter {
   addSpent() {
     if (this.spent >= this.capacity) return;
     const el = this.elements[this.spent];
-    el.src = AmmoCounter.getAmmoIcon(this.roundType, this.roundClass, true);
+    
+    // 使用新的设置图标方法
+    this.setAmmoIcon(el, this.roundType, this.roundClass, true);
 
     animate(el, {
       x: [-5, 0],
@@ -651,7 +652,8 @@ class AmmoCounter {
     const el = this.elements[this.spent - 1];
 
     if (this.current > 0) {
-      el.src = AmmoCounter.getAmmoIcon(this.roundType, this.roundClass, false);
+      // 使用新的设置图标方法
+      this.setAmmoIcon(el, this.roundType, this.roundClass, false);
       animate(el, {
         opacity: 1,
         x: [5, 0],
@@ -669,6 +671,8 @@ class AmmoCounter {
     this.spent--;
   }
 
+  // removeRound 方法不需要修改，因为它不设置src
+
   static getAmmoIcon(roundType, roundClass, spent) {
     let path = globalConfig.overlayScale >= 1.5 ? "icons_big" : "icons";
     return spent
@@ -676,6 +680,7 @@ class AmmoCounter {
       : `${path}/${roundType}_${roundClass}.webp`;
   }
 }
+
 
 for (const [key, value] of new URLSearchParams(window.location.search)) {
   console.log(key, value);

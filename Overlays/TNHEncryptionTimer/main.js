@@ -60,9 +60,7 @@ function onMessage(e) {
         countdown.duration = event.status.encryptionTime;
 
         encryptionCountText.setValue(encryptionCount, 500);
-        document.getElementById("encryption-icon").src =
-          `icons/${encryptionType}.webp`;
-
+        document.getElementById("encryption-icon").src = "icons/unknown.webp";
         clockText.setValue(0, 500);
         scoreText.setValue(countdown.duration * 50 * scoreMultiplier, 500);
         scoreLostText.setValue(0, 500);
@@ -74,6 +72,7 @@ function onMessage(e) {
           timerBar.setColor("#fc0");
         }, 500);
       } else if (event.status.phase == "Hacking") {
+        document.getElementById("encryption-icon").src =`icons/${encryptionType}.webp`;
         timerBar.setColor("#f80");
         countdown.start();
       } else if (event.status.phase == "Transition") {
